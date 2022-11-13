@@ -7,7 +7,7 @@ import booksRouter from "./routes/books";
 const PORT = 3001;
 
 const app = express();
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:3000", "*"];
 
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
