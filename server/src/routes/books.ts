@@ -1,8 +1,26 @@
-import express from "express";
+import express, { Request, Response } from "express";
+//import { ObjectId } from "mongodb";
+import { collections } from "../services/database.service";
+import Book from "../models/books";
 import * as booksServices from "../services/booksServices";
 import toNewBookEntry from "../utils/utils";
 
 const router = express.Router();
+
+router.get("/", async (_req: Request, res: Response) => {
+  try {
+    if (!collections.books) throw new Error("Collection no found");
+
+    const books = (await collections.books
+      .find({})
+      .limit(20)
+      .toArray()) as Book[];
+
+    res.status(200).send(books);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 router.get("/all", (_req, res) => {
   res.send(booksServices.getBooks());
