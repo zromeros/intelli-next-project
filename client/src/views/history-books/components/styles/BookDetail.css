@@ -1,0 +1,16 @@
+.book-details {
+  margin: 2px;
+  padding: 1rem;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  background-color: red;
+  border: 1px solid blue;
+  border-radius: 0.5rem;
+}
+
+.book-details > p {
+  width: calc(33% - 1rem);
+  background-color: transparent;
+}
