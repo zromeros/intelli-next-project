@@ -4,8 +4,7 @@ import toNewBookEntry from "../utils/utils";
 
 const router = express.Router();
 
-router.get("/", (_req, res) => {
-  console.log("test");
+router.get("/all", (_req, res) => {
   res.send(booksServices.getBooks());
 });
 
