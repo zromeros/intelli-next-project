@@ -1,26 +1,73 @@
 import { useEffect, useState } from "react";
-import { getBooks } from "../../services/history-books/booksAPI";
+import { getConstants, listBooks } from "../../services/history-books/booksAPI";
+import { BookDetail } from "./components/BookDetail";
+import { BookForm } from "./components/BookForm";
 
 export const HistoryBooks = () => {
-  //const [books, setBooks] = [];
-  const [isFetch, setIsFetch] = useState(true);
+  const [authorsOptions, setAuthorOptions] = useState([]);
+  const [yearsOptions, setYearsOptions] = useState([]);
+  const [isFetchConstants, setIsFetchConstants] = useState(true);
+  const [isFetchBooks, setIsFetchBooks] = useState(false);
+  const [books, setBooks] = useState([]);
+
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchConstants = async () => {
       try {
-        const response = await getBooks();
-        console.log({ response });
+        const { ok, res } = await getConstants();
+        if (!ok) throw res;
+        setAuthorOptions(res.authors);
+        setYearsOptions(res.years);
       } catch (error) {
         alert(error || "Error");
       }
     };
-    if (isFetch) {
+    if (isFetchConstants) {
+      fetchConstants();
+      setIsFetchConstants(false);
+    }
+
+    const fetchBooks = async () => {
+      try {
+        const { ok, res } = await listBooks({ ...formData });
+        if (!ok) throw res;
+        console.log({ res });
+        setBooks(res);
+      } catch (error) {
+        alert(error || "Error");
+      }
+    };
+    if (isFetchBooks) {
       fetchBooks();
-      setIsFetch(false);
+      setIsFetchBooks(false);
     }
 
     return () => null;
-  }, [isFetch, setIsFetch]);
+  }, [isFetchConstants, formData, books, isFetchBooks]);
 
-  return <p> im a book </p>;
+  const handleSubmit = (obj) => {
+    setFormData(obj);
+    setIsFetchBooks(true);
+  };
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <BookForm
+        authorsOptions={authorsOptions}
+        yearsOptions={yearsOptions}
+        handleSubmit={handleSubmit}
+      />
+      {books &&
+        books.map((book) => {
+          return <BookDetail book={book} key={book._id} />;
+        })}
+    </div>
+  );
 };

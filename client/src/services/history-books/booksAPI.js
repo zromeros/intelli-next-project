@@ -2,11 +2,14 @@ import { baseURL } from "../enviroment";
 import * as Methods from "../methods";
 
 const endpoints = {
-  history: `${baseURL}/all`,
+  books: `${baseURL}/list`,
+  constants: `${baseURL}/constants`,
 };
 
-const getBooks = async () => {
-  return await Methods.get({ url: endpoints.history });
+export const listBooks = async (body) => {
+  return await Methods.post({ url: endpoints.books, body });
 };
 
-export { getBooks };
+export const getConstants = async () => {
+  return await Methods.get({ url: endpoints.constants });
+};
